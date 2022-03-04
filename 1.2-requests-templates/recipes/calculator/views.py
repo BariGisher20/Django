@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 
 DATA = {
@@ -18,6 +19,21 @@ DATA = {
     },
     # можете добавить свои рецепты ;)
 }
+
+
+def helper_views(request, recipe):
+    servings = int(request.GET.get("servings", 1))
+    context = {}
+    if recipe in list(DATA.keys()):
+        ingredient = DATA.get(recipe)
+        new_quantity = []
+        for key, value in ingredient.items():
+            value *= servings
+            new_quantity.append(value)
+        new = dict(zip(list(ingredient.keys()), new_quantity))
+        context['recipe'] = new
+        return render(request, 'calculator/index.html', context)
+
 
 # Напишите ваш обработчик. Используйте DATA как источник данных
 # Результат - render(request, 'calculator/index.html', context)
