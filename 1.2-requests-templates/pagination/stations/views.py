@@ -23,5 +23,6 @@ def bus_stations(request):
         'page': page,
         'bus_stations': directions,
 
+
     }
     return render(request, 'stations/index.html', context)
