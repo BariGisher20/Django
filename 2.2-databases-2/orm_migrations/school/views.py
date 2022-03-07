@@ -7,7 +7,6 @@ from school.models import Student, Teacher
 def students_list(request):
     template = 'school/students_list.html'
     students = Student.objects.all()
-    teachers = Teacher.objects.all()
     context = {
         'object_list': students,
     }
