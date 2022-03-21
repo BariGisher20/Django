@@ -22,7 +22,8 @@ from measurement.views import DemoView, SensorView, MeasurementCreateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('demo/', DemoView.as_view()),
-    path('sensor/<pk>/', SensorView.as_view()),
+    path('sensors/', DemoView.as_view()),
+    path('sensors/<pk>/', SensorView.as_view()),
     path('measurements/<pk>/', MeasurementCreateView.as_view()),
 
     path('api/', include('measurement.urls')),  # подключаем маршруты из приложения measurement
