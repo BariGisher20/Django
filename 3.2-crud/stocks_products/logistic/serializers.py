@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django_filters import rest_framework as filters
 
 from logistic.models import Product, Stock, StockProduct
 
@@ -41,7 +42,7 @@ class StockSerializer(serializers.ModelSerializer):
                 stock=stock,
                 product=position['product'],
                 quantity=position['quantity'],
-                price=position['price']).save()
+                price=position['price'])
         return stock
 
     def update(self, instance, validated_data):
@@ -55,9 +56,12 @@ class StockSerializer(serializers.ModelSerializer):
         # в нашем случае: таблицу StockProduct
         # с помощью списка positions
         for position in positions:
-            StockProduct.objects.create(
+            positions, created = StockProduct.objects.update_or_create(
                 stock=stock,
                 product=position['product'],
-                quantity=position['quantity'],
-                price=position['price']).save()
+                defaults={'quantity': position['quantity'], 'price': position['price']}
+            )
         return stock
+
+
+
