@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from advertisements.models import Advertisement
+from rest_framework.exceptions import ValidationError
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,9 +16,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 class AdvertisementSerializer(serializers.ModelSerializer):
     """Serializer для объявления."""
-    # в документации DateFromToRangeFilter используется в сериализаторе, не понимаю как его применять в фильтрации..
-    # filterset_fields = ['creator', DateFromToRangeFilter] таким образом не получается:)
-
     creator = UserSerializer(
         read_only=True,
     )
@@ -40,9 +38,11 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def validate(self, data):
-        # self.context['request'].user.id
+        creator_id = self.context["request"].user.id
+        creators = Advertisement.objects.filter(creator=creator_id)
+        if len(creators) > 10:
+            raise ValidationError('Не больше трех')
         """Метод для валидации. Вызывается при создании и обновлении."""
         # добавить что не больше 10 объявлений
         # TODO: добавьте требуемую валидацию
-
         return data
