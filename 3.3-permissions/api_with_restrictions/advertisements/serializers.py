@@ -1,3 +1,4 @@
+import request
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -39,8 +40,8 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         creator_id = self.context["request"].user.id
-        creators = Advertisement.objects.filter(creator=creator_id)
-        if len(creators) > 10:
+        creators = Advertisement.objects.filter(creator=creator_id, status='OPEN')
+        if len(creators) > 10 and request.method == "POST" or "PATCH":
             raise ValidationError('Не больше трех')
         """Метод для валидации. Вызывается при создании и обновлении."""
         # добавить что не больше 10 объявлений
