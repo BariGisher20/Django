@@ -41,8 +41,10 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     def validate(self, data):
         creator_id = self.context["request"].user.id
         creators = Advertisement.objects.filter(creator=creator_id, status='OPEN')
-        if len(creators) > 10 and request.method == "POST" or "PATCH":
+        if len(creators) > 3and request.method == "POST":
             raise ValidationError('Не больше трех')
+        elif request.method == "PATCH" and data.status == 'OPEN':
+            raise ValidationError('У вас три открытых объявления')
         """Метод для валидации. Вызывается при создании и обновлении."""
         # добавить что не больше 10 объявлений
         # TODO: добавьте требуемую валидацию
