@@ -93,32 +93,30 @@ def test_success_create(client, course_factory):
     assert response.status_code == 201
 
 
-# @pytest.mark.django_db
-# def test_success_update(client, course_factory):
-#     # Arrange
-#     courses = course_factory(_quantity=10)
-#     course = Course.objects.first()
-#
-#     # Act
-#     response = client.patch(f'/courses/?id={course.id}', {
-#         'name': 'css',
-#     })
-#
-#     # Assert
-#     assert response.status_code == 200
-#
-#
-# @pytest.mark.django_db
-# def test_success_delete(client, course_factory):
-#     # Arrange
-#     courses = course_factory(_quantity=10)
-#     course = Course.objects.first()
-#
-#     # Act
-#     response = client.delete(f'/courses/?id={course.id}', {
-#         'name': 'css',
-#     })
-#
-#     # Assert
-#     assert response.status_code == 204
+@pytest.mark.django_db
+def test_success_update(client, course_factory):
+    # Arrange
+    courses = course_factory(_quantity=10)
+    course = Course.objects.first()
+
+    # Act
+    response = client.patch(f'/courses/{course.id}/', name='css')
+
+    # Assert
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_success_delete(client, course_factory):
+    # Arrange
+    courses = course_factory(_quantity=10)
+    course = Course.objects.first()
+
+    # Act
+    response = client.delete(f'/courses/{course.id}/', {
+        'name': 'css',
+    })
+
+    # Assert
+    assert response.status_code == 204
 
